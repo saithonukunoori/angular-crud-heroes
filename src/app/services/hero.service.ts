@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Hero } from './hero';
-import { HEROES } from './mock-heroes';
+import { Hero } from '../hero';
+import { HEROES } from '../mock-heroes';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HeroService {
 
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService,private http:HttpClient) { }
+  Url = "https://localhost:7156/api/hero";
 
   // getHeroes(): Hero[] {
   //   return HEROES;
@@ -26,14 +28,34 @@ export class HeroService {
    */
 
   // of(HEROES) returns an Observable<Hero[]> that emits a single value, the array of mock heroes.
-  getHeroes(): Observable<Hero[]> {
+  getHeroes(): Observable<any> {
     this.messageService.add('HeroService: fetched heroes');
-    return of(HEROES);
+    return this.http.get(this.Url);
+    //return of(HEROES);
   }
 
-  getHero(id:any) : Observable<Hero | undefined> {
+  getHero(id:any) : Observable<any> {
     this.messageService.add(`HeroService: fetched hero id=${id}`);
-    return of(HEROES.find((h)=>h.id==id))
+    return this.http.get(this.Url+"/"+ +id);
 
   }
+
+  AddHero(hero:Hero){
+    return this.http.post(this.Url, hero,
+      {headers: new HttpHeaders({'Content-Type':'application/json'}) }
+    );
+  }
+
+  UpdateHero(hero:Hero){
+    return  this.http.put(this.Url, hero,
+      {headers: new HttpHeaders({'Content-Type':'application/json'}) }
+    );
+  }
+
+  DeleteHero(id:number){
+   return  this.http.delete(this.Url+ "/"+id);
+    
+  }
+
+
 }

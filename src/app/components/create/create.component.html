@@ -1,0 +1,23 @@
+<div *ngIf="!isHeroAdded" style="width: 500px; margin: auto;">
+    <form #HeroForm="ngForm" class="submit-form" (ngSubmit)="addHero(HeroForm.value)">
+      <div *ngIf="!isHeroAdded">
+
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input class="form-control" id="id" required name="id" ngModel />
+          </div>
+
+        <div class="form-group">
+          <label for="title">NAME</label>
+          <input type="text" class="form-control" id="title" required  name="name" ngModel/>
+        </div>
+    
+        <button [disabled]="!HeroForm.valid" class="btn btn-success">Create</button>
+      </div>      
+    </form>
+</div>
+
+<div *ngIf="isHeroAdded">
+    <h3>New Hero added!</h3>
+    <button class="btn btn-success" (click)="newHero()"> + Add More</button>
+</div>
